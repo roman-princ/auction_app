@@ -11,7 +11,7 @@ using auction_app.Data;
 namespace auction_app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220908090638_init")]
+    [Migration("20220914201910_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,18 +21,12 @@ namespace auction_app.Migrations
 
             modelBuilder.Entity("auction_app.Models.Auction", b =>
                 {
-                    b.Property<Guid>("AuctionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("CreatorUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CurrentBid")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("CurrentHighestBidderUserId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
@@ -40,27 +34,30 @@ namespace auction_app.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("StartingBid")
+                    b.Property<int>("HighestBid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HighestBidderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("AuctionId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CreatorUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("CurrentHighestBidderUserId");
+                    b.HasIndex("HighestBidderId");
 
                     b.ToTable("Auctions");
                 });
 
             modelBuilder.Entity("auction_app.Models.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -70,7 +67,7 @@ namespace auction_app.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -79,19 +76,19 @@ namespace auction_app.Migrations
                 {
                     b.HasOne("auction_app.Models.User", "Creator")
                         .WithMany("MyAuctions")
-                        .HasForeignKey("CreatorUserId")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("auction_app.Models.User", "CurrentHighestBidder")
+                    b.HasOne("auction_app.Models.User", "HighestBidder")
                         .WithMany()
-                        .HasForeignKey("CurrentHighestBidderUserId")
+                        .HasForeignKey("HighestBidderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Creator");
 
-                    b.Navigation("CurrentHighestBidder");
+                    b.Navigation("HighestBidder");
                 });
 
             modelBuilder.Entity("auction_app.Models.User", b =>

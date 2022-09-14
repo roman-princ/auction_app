@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace auction_app.VM
+namespace auction_app.Commands
 {
-    public class RelayCommand : ICommand
+    public class ParametrizedRelayCommand<T> : ICommand
     {
         public event EventHandler? CanExecuteChanged;
 
-        private Action _execute;
-        private Func<bool>? _canExecute;
+        private Action<T> _execute;
+        private Func<T, bool> _canExecute;
 
-        public RelayCommand(Action execute, Func<bool>? canExecute = null)
+        public ParametrizedRelayCommand(Action<T> execute, Func<T, bool> canExecute = null)
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -22,12 +22,15 @@ namespace auction_app.VM
 
         public bool CanExecute(object? parameter)
         {
-            return _canExecute == null ? true : _canExecute();
+            if (_canExecute == null) return true;
+            if (parameter == default)
+                return _canExecute(default);
+            return _canExecute((T)parameter);
         }
 
-        public void Execute(object? parameter)
+        public void Execute(object parameter)
         {
-            _execute();
+            _execute((T)parameter);
         }
 
         public void RaiseCanExecuteChanged()

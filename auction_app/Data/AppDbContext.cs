@@ -14,19 +14,14 @@ namespace auction_app.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Auction> Auctions { get; set; }
 
-        public AppDbContext() : base()
-        {
-            
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite("Data Source=auctions_app.sqlite");
+            options.UseSqlite("Data Source= auctions_app.sqlite");
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
-            builder.Entity<Auction>().HasKey(x => x.AuctionId);
-            builder.Entity<User>().HasKey(x => x.UserId);
+            builder.Entity<Auction>().HasKey(x => x.Id);
+            builder.Entity<User>().HasKey(x => x.Id);
             builder.Entity<Auction>().HasOne(x => x.Creator).WithMany(x => x.MyAuctions);
         }
 

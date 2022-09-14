@@ -13,54 +13,55 @@ namespace auction_app.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Username = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Auctions",
                 columns: table => new
                 {
-                    AuctionId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
-                    StartingBid = table.Column<int>(type: "INTEGER", nullable: false),
-                    CurrentBid = table.Column<int>(type: "INTEGER", nullable: false),
+                    HighestBid = table.Column<int>(type: "INTEGER", nullable: false),
                     EndDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatorUserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CurrentHighestBidderUserId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    CreatorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    HighestBidderId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Auctions", x => x.AuctionId);
+                    table.PrimaryKey("PK_Auctions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Auctions_Users_CreatorUserId",
-                        column: x => x.CreatorUserId,
+                        name: "FK_Auctions_Users_CreatorId",
+                        column: x => x.CreatorId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Auctions_Users_CurrentHighestBidderUserId",
-                        column: x => x.CurrentHighestBidderUserId,
+                        name: "FK_Auctions_Users_HighestBidderId",
+                        column: x => x.HighestBidderId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Auctions_CreatorUserId",
+                name: "IX_Auctions_CreatorId",
                 table: "Auctions",
-                column: "CreatorUserId");
+                column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Auctions_CurrentHighestBidderUserId",
+                name: "IX_Auctions_HighestBidderId",
                 table: "Auctions",
-                column: "CurrentHighestBidderUserId");
+                column: "HighestBidderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
